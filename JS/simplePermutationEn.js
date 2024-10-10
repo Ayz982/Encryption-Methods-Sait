@@ -62,7 +62,6 @@ function splitIntoGroups(text, groupSize) {
 
 // Функція для показу/приховування пояснень
 document.getElementById('toggle-steps-btn').addEventListener('click', function () {
-    this.classList.toggle('active');
     const stepDiv = document.getElementById('step-by-step');
     const btn = document.getElementById('toggle-steps-btn');
     if (stepDiv.style.display === 'none') {
@@ -82,6 +81,8 @@ document.getElementById('toggle-steps-btn').addEventListener('click', function (
         btn.textContent = 'Показати пояснення';
     }
 });
+
+// Функція для покрокового відображення процесу шифрування
 function displaySteps(table, rows, columns, encryptedText) {
     const stepDiv = document.getElementById('step-by-step');
     stepDiv.innerHTML = ''; // Очищуємо попередній контент
@@ -98,9 +99,31 @@ function displaySteps(table, rows, columns, encryptedText) {
     trimmedMessage.textContent = `Текст після видалення пробілів: ${trimming(document.getElementById('input-text').value)}`;
     stepDiv.appendChild(trimmedMessage);
 
-    // Крок 3: Заповнення таблиці по стовпцях
+    // Крок 3: Заповнення таблиці
+    const fillTableHeading = document.createElement('h4');
+    fillTableHeading.textContent = 'Заповнення таблиці по рядках:';
+    stepDiv.appendChild(fillTableHeading);
+
+    const tableElement = document.createElement('table');
+    tableElement.classList.add('encryption-table');
+
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < columns; j++) {
+            const cell = document.createElement('td');
+            cell.textContent = table[i][j];
+            if (i === 0) {
+                cell.style.backgroundColor = 'lightgreen'; // Виділяємо перший рядок (заповнення по рядках)
+            }
+            row.appendChild(cell);
+        }
+        tableElement.appendChild(row);
+    }
+    stepDiv.appendChild(tableElement);
+
+    // Крок 4: Зчитування по стовпцях (не змінюючи таблиці, просто виділяючи стовпці)
     const readColsHeading = document.createElement('h4');
-    readColsHeading.textContent = 'Заповнення таблиці по стовпцях:';
+    readColsHeading.textContent = 'Зчитування таблиці по стовпцях:';
     stepDiv.appendChild(readColsHeading);
 
     const colTable = document.createElement('table');
@@ -110,9 +133,9 @@ function displaySteps(table, rows, columns, encryptedText) {
         const row = document.createElement('tr');
         for (let col = 0; col < columns; col++) {
             const cell = document.createElement('td');
-            cell.textContent = table[i][col] || ''; // Запобігаємо помилкам, якщо cell порожнє
+            cell.textContent = table[i][col];
             if (col === 0) {
-                cell.style.backgroundColor = 'lightblue'; // Виділяємо перші елементи стовпців
+                cell.style.backgroundColor = 'lightblue'; // Виділяємо перші елементи стовпців (зчитування по стовпцях)
             }
             row.appendChild(cell);
         }
@@ -120,32 +143,9 @@ function displaySteps(table, rows, columns, encryptedText) {
     }
     stepDiv.appendChild(colTable);
 
-    // Крок 4: Зчитування матриці по рядках
-    const readRowsHeading = document.createElement('h4');
-    readRowsHeading.textContent = 'Зчитування таблиці по рядках:';
-    stepDiv.appendChild(readRowsHeading);
-
-    const rowTable = document.createElement('table');
-    rowTable.classList.add('row-read-table');
-
-    for (let i = 0; i < rows; i++) {
-        const row = document.createElement('tr');
-        for (let col = 0; col < columns; col++) {
-            const cell = document.createElement('td');
-            cell.textContent = table[i][col] || ''; // Запобігаємо помилкам, якщо cell порожнє
-            if (i === 0) {
-                cell.style.backgroundColor = '#f0c0c0'; // Виділяємо перший рядок
-            }
-            row.appendChild(cell);
-        }
-        rowTable.appendChild(row);
-    }
-    stepDiv.appendChild(rowTable);
-
     // Крок 5: Результат шифрування
     const finalResultDiv = document.createElement('div');
     finalResultDiv.classList.add('important-step');
-    finalResultDiv.textContent = `Результат шифрування: ${encryptedText}`;
+    finalResultDiv.textContent = `\Зашифрований текст: ${encryptedText}`;
     stepDiv.appendChild(finalResultDiv);
 }
-
