@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прооста перестановка | Шифрування</title>
+    <title>Прооста перестановка | Дешифрування</title>
     <link rel="stylesheet" href="../Styles/style.css">
     <link rel="stylesheet" href="../Styles/simplePermutation.css">
 </head>
@@ -108,32 +108,32 @@
         </nav>
       </div>
       <div class="container">
-        <h1>Шифрування простою перестановкою</h1>
-        <form id="encryption-form" class="form">
-            <label for="input-text">Введіть повідомлення:</label>
-            <textarea id="input-text" rows="4" required></textarea>
+        <h1>Дешифрування простою перестановкою</h1>
+        <form id="decryption-form" class="form">
+            <label for="encrypted-text">Введіть зашифрований текст:</label>
+            <textarea id="encrypted-text" rows="4" required></textarea>
             
             <label for="rows">Введіть кількість рядків:</label>
             <input type="number" id="rows" required min="1" placeholder="Кількість рядків">
             
             <label for="columns">Введіть кількість стовпців:</label>
             <input type="number" id="columns" required min="1" placeholder="Кількість стовпців">
-
-            <button type="submit">Зашифрувати</button>
+    
+            <button type="submit">Дешифрувати</button>
         </form>
-
+    
         <div class="result-box" id="result-box" style="display: none;">
-          <h2>Результат шифрування:</h2>
-          <p id="encrypted-text"></p>
-          <!-- Кнопка для показу пояснень -->
-      </div>
+            <h2>Результат дешифрування:</h2>
+            <p id="decrypted-text"></p>
+        </div>
         
-        <small>Примітка: Використовується символ "_" для заповнення.</small><br>
         <button id="toggle-steps-btn">Показати пояснення</button>
-<div id="step-by-step" class="explanation-box" style="display: none;"></div>
+
+        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="../JS/script.js" defer></script>
-    <script src="../JS/simplePermutationEn.js"></script>
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="../JS/script.js" defer></script>
+      <script src="../JS/simplePermutationDe.js" defer></script>
 </body>
 </html>
