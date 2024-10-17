@@ -1,0 +1,132 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f5; /* Світло-сірий фон */
+    color: #333;
+}
+
+#header + .container {
+    margin-top: 20px; /* Відступ для контейнера, якщо він слідує за #header */
+}
+
+/* Стилі для контейнера */
+.container {
+    width: 90%; /* Відповідно до ширини екрана */
+    max-width: 600px; /* Максимальна ширина */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 2px solid #b2b2b2; /* Сіра рамка */
+    margin: 0 auto; /* Центрування контейнера */
+}
+
+/* Заголовок сторінки */
+h1 {
+    font-size: 24px;
+    color: #3e8e41; /* Зелений */
+    margin-bottom: 20px;
+}
+
+/* Стиль для форми */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Поля введення тексту */
+textarea, input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #eef4ee; /* Світло-зелений */
+    color: #333;
+    resize: none;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #3e8e41; /* Акцент на зеленому */
+    outline: none;
+}
+
+/* Кнопка шифрування */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #3e8e41; /* Зелена кнопка */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #366a36; /* Трохи темніший зелений */
+}
+
+/* Стилі для відображення результату */
+.result-box {
+    background-color: #f0f5f0; /* Легкий зелено-сірий фон */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    color: #333;
+    word-wrap: break-word;
+}
+
+/* Стилі для пояснень */
+.explanation-box {
+    border: 2px solid #ff9800; /* Помаранчева рамка */
+    background-color: #fff3e0; /* Світло-помаранчевий фон */
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.explanation-box h4 {
+    color: #e65100; /* Темно-помаранчевий */
+    font-weight: bold;
+}
+
+.explanation-box table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.explanation-box td, .explanation-box th {
+    border: 1px solid #ffcc80; /* Світло-помаранчевий */
+    padding: 8px;
+    text-align: center;
+}
+
+.explanation-box td {
+    background-color: #ffe0b2; /* Світло-жовтий */
+}
+
+.important-step {
+    background-color: #ffcc80;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Дрібніші стилі */
+small {
+    color: #777;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+}
