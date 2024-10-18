@@ -51,9 +51,17 @@ function doublePermutationDecryption(message, keyColumns, keyRow) {
     const row = keyR.length;
     const columns = keyC.length;
     // Сортуємо ключі
-    const sortKeyR = keyR.sort((a, b) => a - b);
+    const sortKeyR = [];
+    for(let i = 0; i < row; i++){
+        sortKeyR.push(keyR[i]);
+    }
+    sortKeyR.sort((a, b) => a - b);
     // Сортуємо ключі
-    const sortKeyC = keyC.sort((a, b) => a - b);
+    const sortKeyC = [];
+    for(let i = 0; i < columns; i++){
+        sortKeyC.push(keyC[i]);
+    }
+    sortKeyC.sort((a, b) => a - b);
     console.log(sortKeyR);
     console.log(sortKeyC);
     message = trimming2(message);
