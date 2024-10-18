@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дешифрування подвійною перестановокою</title>
+    <title>Дешифрування магічних квадратів</title>
     <link rel="stylesheet" href="../Styles/style.css">
-    <link rel="stylesheet" href="../Styles/simplePermutation.css">
 </head>
-
 <body>
     <div id="header">
         <div class="logo">
@@ -109,41 +106,5 @@
           </ul>
         </nav>
       </div>
-
-    <div class="container">
-        <h1>Дешифрування подвійною перестановкою</h1>
-        <form id="encryption-form" class="form">
-            <!-- Поле для введення тексту -->
-            <label for="input-text">Введіть повідомлення:</label>
-            <textarea id="input-text" required placeholder="Введіть текст для шифрування"></textarea>
-    
-            <!-- Поле для введення ключа для рядків -->
-            <label for="rows">Введіть ключ для рядків (числа через пробіл):</label>
-            <input type="text" id="rows" required placeholder="Наприклад: 3 1 4 2">
-    
-            <!-- Поле для введення ключа для стовпців -->
-            <label for="columns">Введіть ключ для стовпців (числа через пробіл):</label>
-            <input type="text" id="columns" required placeholder="Наприклад: 2 4 1 3">
-    
-            <!-- Кнопка для дешифрування -->
-            <button type="submit">Розшифрувати</button>
-        </form>
-    
-        <!-- Виведення результату дешифрування -->
-        <div class="result-box" id="result-box" style="display: none;">
-            <h2>Результат дешифрування:</h2>
-            <p id="encrypted-text"></p>
-        </div>
-    
-        <small>Примітка: Повідомлення буде доповнено символом "_", якщо потрібно.</small>
-        <br>
-    
-        <!-- Кнопка для показу пояснень -->
-        <button id="toggle-steps-btn">Показати пояснення</button>
-        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
-    </div>
-    <script src="../JS/script.js"></script>
-    <script src="../JS/doublePermutationDe.js"></script>
 </body>
-
 </html>
