@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Шифрування магічних квадратів</title>
     <link rel="stylesheet" href="../Styles/style.css">
+    <link rel="stylesheet" href="../Styles/magicSquare.css">
 </head>
 <body>
     <div id="header">
@@ -108,7 +109,39 @@
             </ul>
         </nav>
     </div>
+    <div class="container">
+        <h1>Шифрування магічними квадратами</h1>
+        <form id="encryption-form" class="form">
+            <label for="input-text">Введіть повідомлення:</label>
+            <textarea id="input-text" rows="4" required></textarea>
+            
+            <label for="magic-square-size">Оберіть розмір магічного квадрата:</label>
+            <select id="magic-square-size" required>
+                <option value="3">3x3 магічний квадрат</option>
+                <option value="4">4x4 магічний квадрат</option>
+                <option value="5">5x5 магічний квадрат</option>
+            </select>
+    
+            <div id="magic-square-input" style="display: none;">
+                <h3>Заповніть магічний квадрат:</h3>
+                <table id="square-table"></table>
+            </div>
+    
+            <button type="submit">Зашифрувати</button>
+        </form>
+    
+        <div class="result-box" id="result-box" style="display: none;">
+            <h2>Результат шифрування:</h2>
+            <p id="encrypted-text"></p>
+        </div>
+        
+        <small>Примітка: Перевірте коректність заповнення магічного квадрата.</small><br>
+        <button id="toggle-steps-btn">Показати пояснення</button>
+        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../JS/script.js" defer></script>
+    <script src="../JS/magicSquareEn.js"></script>
 </body>
 </html>
