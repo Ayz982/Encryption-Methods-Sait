@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шифрування афінною підстановкою Цезаря</title>
+    <link rel="stylesheet" href="../Styles/style.css">
+    <link rel="stylesheet" href="../Styles/affineCipher.css">
+    
+</head>
+<body>
+    <div id="header">
+        <div class="logo">
+            <a href="../index.html">CryptoTool</a>
+        </div>
+        <nav>
+            <form class="search" id="search-form" action="search.php">
+                <input id="search-input" name="q" placeholder="Пошук..." type="search">
+            </form>
+            <ul id="menu">
+                <li>
+                    <a href="../index.html">Головна</a>
+                </li>
+                <li>
+                    <a href="">Матеріали</a>
+                    <ul class="mega-dropdown" id="menu">
+                        <li class="row">
+                            <ul class="mega-col" id="menu">
+                                <li><a href="">Проста перестановка</a></li>
+                                <li><a href="#">Одиночна перестановка по ключу</a></li>
+                                <li><a href="#">Подвійна перестановока</a></li>
+                                <li><a href="#">Магічні квадрати</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Афінна перестановка Цезаря</a></li>
+                                <li><a href="#">Шифр Цезаря за ключем</a></li>
+                                <li><a href="#">Таблиці Трисемуса</a></li>
+                                <li><a href="#">Шифр Плейфейра</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Шифр Віженера</a></li>
+                                <li><a href="#">Шифр Хілла</a></li>
+                                <li><a href="#">Шифр</a></li>
+                                <li><a href="#">Шифр</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="">Шифрування</a>
+                    <ul class="mega-dropdown" id="menu">
+                        <li class="row">
+                            <ul class="mega-col" id="menu">
+                                <li><a href="encryption-pages/simplePermutationEncryption.html">Проста перестановка</a>
+                                </li>
+                                <li><a href="singlePermutationEncryption.html">Одиночна перестановка по ключу</a></li>
+                                <li><a href="doublePermutationEncryption.html">Подвійна перестановока</a></li>
+                                <li><a href="magicSquareEncryption.html">Магічні квадрати</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Афінна перестановка Цезаря</a></li>
+                                <li><a href="#">Шифр Цезаря за ключем</a></li>
+                                <li><a href="#">Таблиці Трисемуса</a></li>
+                                <li><a href="#">Шифр Плейфейра</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Шифр Віженера</a></li>
+                                <li><a href="#">Шифр Хілла</a></li>
+                                <li><a href="#">Шифр</a></li>
+                                <li><a href="#">Шифр</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="">Дешифрування</a>
+                    <ul class="mega-dropdown" id="menu">
+                        <li class="row">
+                            <ul class="mega-col" id="menu">
+                                <li><a href="../decryption-pages/simplePermutationDecryption.html">Проста перестановка</a>
+                                </li>
+                                <li><a href="../decryption-pages/singlePermutationDecryption.html">Одиночна перестановка по ключу</a></li>
+                                <li><a href="../decryption-pages/doublePermutationDecryption.html">Подвійна перестановока</a></li>
+                                <li><a href="../decryption-pages/magicSquareDecryption.html">Магічні квадрати</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Афінна перестановка Цезаря</a></li>
+                                <li><a href="#">Шифр Цезаря за ключем</a></li>
+                                <li><a href="#">Таблиці Трисемуса</a></li>
+                                <li><a href="#">Шифр Плейфейра</a></li>
+                            </ul>
+                            <ul class="mega-col" id="menu">
+                                <li><a href="#">Шифр Віженера</a></li>
+                                <li><a href="#">Шифр Хілла</a></li>
+                                <li><a href="#">Шифр</a></li>
+                                <li><a href="#">Шифр</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="">Допомога</a>
+                    <ul id="menu">
+                        <li><a href="#">Телеграм бот</a></li>
+                        <li><a href="#">Перелік джерел</a></li>
+                        <li><a href="#">Контакти</a></li>
+                        <li><a href="#">Форма зворотнього зв'язку</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container">
+        <h1>Шифрування афінною підстановкою Цезаря</h1>
+        <form id="encryption-form" class="form">
+            <label for="plain-text">Введіть повідомлення:</label>
+            <textarea id="plain-text" rows="4" required></textarea>
+            
+            <label for="a-value">Введіть значення "a":</label>
+            <input type="number" id="a-value" required min="1" placeholder="Значення 'a'">
+    
+            <label for="b-value">Введіть значення "b":</label>
+            <input type="number" id="b-value" required placeholder="Значення 'b'">
+            <label for="alphabet">Виберіть алфавіт:</label>
+        <select id="alphabet" required>
+            <option value="latin">Латиниця</option>
+            <option value="cyrillic">Кирилиця</option>
+        </select>
+            <button type="submit">Зашифрувати</button>
+        </form>
+    
+        <div class="result-box" id="result-box" style="display: none;">
+            <h2>Результат шифрування:</h2>
+            <p id="encrypted-text"></p>
+        </div>
+        
+        <button id="toggle-steps-btn">Показати пояснення</button>
+    
+        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="../JS/script.js" defer></script>
+    <script src="../JS/affineCipherEn.js"></script>
+</body>
+</html>
