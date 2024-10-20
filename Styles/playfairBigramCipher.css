@@ -1,0 +1,156 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f5; /* Світло-сірий фон */
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 2px solid #b2b2b2; /* Сіра рамка */
+    margin: 20px auto; /* Центрування контейнера з відступом зверху і знизу */
+}
+
+h1 {
+    font-size: 24px;
+    color: #3e8e41; /* Зелений */
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+textarea, input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #eef4ee; /* Світло-зелений */
+    color: #333;
+    resize: none;
+}
+
+textarea:focus, input[type="text"]:focus,input[type="number"]:focus, select:focus {
+    border-color: #3e8e41; /* Акцент на зеленому */
+    outline: none;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #3e8e41; /* Зелена кнопка */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #366a36; /* Трохи темніший зелений */
+}
+
+.result-box {
+    background-color: #f0f5f0; /* Легкий зелено-сірий фон */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    color: #333;
+    word-wrap: break-word;
+    margin-top: 20px;
+}
+
+.explanation-box {
+    border: 2px solid #ff9800;
+    background-color: #fff3e0;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.explanation-box h4 {
+    color: #e65100;
+    font-weight: bold;
+}
+
+.explanation-box table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.explanation-box td, .explanation-box th {
+    border: 1px solid #ffcc80;
+    padding: 8px;
+    text-align: center;
+}
+
+.explanation-box td {
+    background-color: #ffe0b2;
+}
+
+.important-step {
+    background-color: #ffcc80;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+small {
+    color: #777;
+}
+
+#toggle-steps-btn {
+    margin: 20px 0; /* Відступ для кнопки зверху та знизу */
+    padding: 10px 20px;
+    background-color: #003366; /* Темно-синій */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#toggle-steps-btn:hover {
+    background-color: #00509e; /* Світло-синій при наведенні */
+}
+
+#toggle-steps-btn.active {
+    background-color: #f1e0d6; /* Виділення при активації */
+    color: #003366; /* Темно-синій текст */
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .form {
+        gap: 10px;
+    }
+}
