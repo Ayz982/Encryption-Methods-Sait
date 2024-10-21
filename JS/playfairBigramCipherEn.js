@@ -58,43 +58,56 @@ document.getElementById('encryption-form-key').addEventListener('submit', functi
 });
 
 // Функція для шифрування за допомогою біграмного шифру Плейфейра
+// Функція для шифрування за допомогою біграмного шифру Плейфейра
 function playfairBigramCipherEncryption(message, key, alphabetType, rows, columns) {
     message = trimming(message).toUpperCase();
     key = removeDuplicateCharsFromKey(trimming(key).toUpperCase());
     const alphabet = getAlphabet(alphabetType);
-
-    if (message.length % 2 !== 0) {
-        throw new Error("Довжина повідомлення повинна бути парною!");
-    }
-
-    let ABC2 = '';
-    for (let i = 0; i < alphabet.length; i++) {
-        if (key.indexOf(alphabet[i]) === -1) {
-            ABC2 += alphabet[i];
+    
+    // Додаємо "X" між однаковими літерами у біграмі
+    let adjustedMessage = '';
+    for (let i = 0; i < message.length; i += 2) {
+        adjustedMessage += message[i];
+        if (message[i + 1] && message[i] === message[i + 1]) {
+            adjustedMessage += 'X';
+        }
+        if (message[i + 1]) {
+            adjustedMessage += message[i + 1];
         }
     }
 
-    const ABCEncryption = key + ABC2;
+    // Якщо після корекції повідомлення має непарну кількість символів, додаємо "X" в кінець
+    if (adjustedMessage.length % 2 !== 0) {
+        adjustedMessage += 'X';
+    }
+
+    const alphabetWithoutDuplicates = alphabet.filter(char => !key.includes(char));
+    const ABCEncryption = key + alphabetWithoutDuplicates.join('');
     const encryptionTable = createEncryptionTable(ABCEncryption, rows, columns);
     let result = '';
 
-    for (let i = 0; i < message.length; i += 2) {
-        const indexLeading = findCharInMatrix(encryptionTable, message[i]);
-        const indexTrailing = findCharInMatrix(encryptionTable, message[i + 1]);
+    for (let i = 0; i < adjustedMessage.length; i += 2) {
+        const indexLeading = findCharInMatrix(encryptionTable, adjustedMessage[i]);
+        const indexTrailing = findCharInMatrix(encryptionTable, adjustedMessage[i + 1]);
+
         if (indexLeading.first !== indexTrailing.first && indexLeading.second !== indexTrailing.second) {
+            // Правило 2: Літери в різних рядках і стовпцях
             result += encryptionTable[indexLeading.first][indexTrailing.second];
             result += encryptionTable[indexTrailing.first][indexLeading.second];
-        } else if (indexLeading.first !== indexTrailing.first && indexLeading.second === indexTrailing.second) {
-            result += encryptionTable[(indexTrailing.first + 1) % rows][indexTrailing.second];
-            result += encryptionTable[(indexLeading.first + 1) % rows][indexLeading.second];
         } else if (indexLeading.first === indexTrailing.first && indexLeading.second !== indexTrailing.second) {
-            result += encryptionTable[indexTrailing.first][(indexTrailing.second + 1) % columns];
+            // Правило 3: Літери в одному рядку – замінюємо на літери праворуч
             result += encryptionTable[indexLeading.first][(indexLeading.second + 1) % columns];
+            result += encryptionTable[indexTrailing.first][(indexTrailing.second + 1) % columns];
+        } else if (indexLeading.second === indexTrailing.second && indexLeading.first !== indexTrailing.first) {
+            // Правило 4: Літери в одному стовпці – замінюємо на літери нижче
+            result += encryptionTable[(indexLeading.first + 1) % rows][indexLeading.second];
+            result += encryptionTable[(indexTrailing.first + 1) % rows][indexTrailing.second];
         }
     }
 
     return result;
 }
+
 
 // Функція для створення таблиці шифру
 function createEncryptionTable(key, rows, columns) {
@@ -176,30 +189,45 @@ document.getElementById('matrix-encryption-form').addEventListener('submit', fun
 
 // Приклад функції шифрування на основі таблиці
 function playfairBigramCipherEncryptionWithMatrix(message, matrix, rows, columns) {
-    // Приведення повідомлення до верхнього регістру
-    message = message.trim().toUpperCase();
+    // Приведення повідомлення до верхнього регістру та видалення пробілів
+    message = trimming(message).toUpperCase();
 
-    if (message.length % 2 !== 0) {
-        throw new Error("Довжина повідомлення повинна бути парною!");
+    // Додаємо "X" між однаковими літерами у біграмі
+    let adjustedMessage = '';
+    for (let i = 0; i < message.length; i += 2) {
+        adjustedMessage += message[i];
+        if (message[i + 1] && message[i] === message[i + 1]) {
+            adjustedMessage += 'X'; // Додаємо "X" якщо літери однакові
+        }
+        if (message[i + 1]) {
+            adjustedMessage += message[i + 1];
+        }
+    }
+
+    // Якщо повідомлення має непарну кількість символів, додаємо "X" в кінець
+    if (adjustedMessage.length % 2 !== 0) {
+        adjustedMessage += 'X';
     }
 
     let result = '';
 
-    for (let i = 0; i < message.length; i += 2) {
-        const indexLeading = findCharInMatrix(matrix, message[i]);
-        const indexTrailing = findCharInMatrix(matrix, message[i + 1]);
+    for (let i = 0; i < adjustedMessage.length; i += 2) {
+        const indexLeading = findCharInMatrix(matrix, adjustedMessage[i]);
+        const indexTrailing = findCharInMatrix(matrix, adjustedMessage[i + 1]);
 
         if (indexLeading && indexTrailing) {
-            // Логіка шифрування, схожа на вашу існуючу функцію
             if (indexLeading.first !== indexTrailing.first && indexLeading.second !== indexTrailing.second) {
+                // Правило 2: Літери в різних рядках і стовпцях
                 result += matrix[indexLeading.first][indexTrailing.second];
                 result += matrix[indexTrailing.first][indexLeading.second];
-            } else if (indexLeading.first !== indexTrailing.first && indexLeading.second === indexTrailing.second) {
-                result += matrix[(indexTrailing.first + 1) % rows][indexTrailing.second];
-                result += matrix[(indexLeading.first + 1) % rows][indexLeading.second];
             } else if (indexLeading.first === indexTrailing.first && indexLeading.second !== indexTrailing.second) {
-                result += matrix[indexTrailing.first][(indexTrailing.second + 1) % columns];
+                // Правило 3: Літери в одному рядку – замінюємо на літери праворуч
                 result += matrix[indexLeading.first][(indexLeading.second + 1) % columns];
+                result += matrix[indexTrailing.first][(indexTrailing.second + 1) % columns];
+            } else if (indexLeading.second === indexTrailing.second && indexLeading.first !== indexTrailing.first) {
+                // Правило 4: Літери в одному стовпці – замінюємо на літери нижче
+                result += matrix[(indexLeading.first + 1) % rows][indexLeading.second];
+                result += matrix[(indexTrailing.first + 1) % rows][indexTrailing.second];
             }
         } else {
             throw new Error("Символ не знайдений в таблиці.");
@@ -209,11 +237,12 @@ function playfairBigramCipherEncryptionWithMatrix(message, matrix, rows, columns
     return result;
 }
 
+
 // Функція для пошуку символу в таблиці
 function findCharInMatrix(matrix, char) {
     for (let row = 0; row < matrix.length; row++) {
         for (let col = 0; col < matrix[row].length; col++) {
-            if (matrix[row][col] === char) {
+            if (matrix[row][col].toUpperCase() === char.toUpperCase()) {
                 return { first: row, second: col };
             }
         }
