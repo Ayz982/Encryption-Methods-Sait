@@ -1,21 +1,45 @@
 // Показати відповідну форму на основі вибраного методу дешифрування
-const decryptionMethodSelect = document.getElementById('decryption-method');
-const decryptionFormKey = document.getElementById('decryption-form-key');
-const decryptionFormMatrix = document.getElementById('decryption-form-matrix');
-const matrixInputDecrypt = document.getElementById('matrix-input-decrypt');
+const methodSelect = document.getElementById('decryption-method');
+const formKey = document.getElementById('decryption-form-key');
+const formMatrix = document.getElementById('decryption-form-matrix');
+const matrixInput = document.getElementById('matrix-input');
 
-decryptionMethodSelect.addEventListener('change', function () {
-    if (decryptionMethodSelect.value === 'key') {
-        decryptionFormKey.style.display = 'block';
-        decryptionFormMatrix.style.display = 'none';
-    } else if (decryptionMethodSelect.value === 'matrix') {
-        decryptionFormKey.style.display = 'none';
-        decryptionFormMatrix.style.display = 'block';
+methodSelect.addEventListener('change', function () {
+    if (methodSelect.value === 'key') {
+        formKey.style.display = 'block';
+        formMatrix.style.display = 'none';
+    } else if (methodSelect.value === 'matrix') {
+        formKey.style.display = 'none';
+        formMatrix.style.display = 'block';
     }
 });
 
-// Обробка події надсилання форми для дешифрування за ключем
-document.getElementById('key-decryption-form').addEventListener('submit', function (event) {
+// Генерація таблиці для дешифрування за допомогою матриці
+document.getElementById('generate-matrix-btn').addEventListener('click', function () {
+    const rows = parseInt(document.getElementById('matrix-rows').value);
+    const columns = parseInt(document.getElementById('matrix-columns').value);
+    const encryptionTable = document.getElementById('encryption-table');
+
+    // Очищення попередньої таблиці
+    encryptionTable.innerHTML = '';
+
+    // Генерація нової таблиці
+    for (let r = 0; r < rows; r++) {
+        let row = document.createElement('tr');
+        for (let c = 0; c < columns; c++) {
+            let td = document.createElement('td');
+            td.innerHTML = `<input type="text" class="matrix-input" data-row="${r}" data-column="${c}" />`;
+            row.appendChild(td);
+        }
+        encryptionTable.appendChild(row);
+    }
+
+    // Показати таблицю для заповнення
+    matrixInput.style.display = 'block';
+});
+
+// Обробка події надсилання форми
+document.getElementById('decryption-form-key').addEventListener('submit', function (event) {
     event.preventDefault();
 
     const message = document.getElementById('message-key').value;
@@ -25,99 +49,49 @@ document.getElementById('key-decryption-form').addEventListener('submit', functi
     const alphabetType = document.getElementById('alphabet').value;
 
     try {
-        const decryptedText = playfairBigramCipherDecryption(message, key, alphabetType, rows, columns);
-        document.getElementById('decrypted-text').textContent = decryptedText;
-        document.getElementById('result-box-decrypt').style.display = 'block'; // Показати результати
+        const encryptedText = playfairBigramCipherDecryption(message, key, alphabetType, rows, columns);
+        document.getElementById('decrypted-text').textContent = encryptedText;
+        document.getElementById('result-box').style.display = 'block'; // Показати результати
     } catch (error) {
         alert(error.message); // Вивести повідомлення про помилку
     }
 });
 
-// Функція для дешифрування за допомогою біграмного шифру Плейфейра
-function playfairBigramCipherDecryption(message, key, alphabetType, rows, columns) {
-    message = trimming(message).toUpperCase();
+function playfairBigramCipherDecryption(encryptedMessage, key, alphabetType, rows, columns) {
+    encryptedMessage = trimming(encryptedMessage).toUpperCase();
     key = removeDuplicateCharsFromKey(trimming(key).toUpperCase());
     const alphabet = getAlphabet(alphabetType);
-    
+
     const alphabetWithoutDuplicates = alphabet.filter(char => !key.includes(char));
     const ABCDecryption = key + alphabetWithoutDuplicates.join('');
-    const decryptionTable = createEncryptionTable(ABCDecryption, rows, columns);
+    const encryptionTable = createEncryptionTable(ABCDecryption, rows, columns);
+
     let result = '';
 
-    for (let i = 0; i < message.length; i += 2) {
-        const indexLeading = findCharInMatrix(decryptionTable, message[i]);
-        const indexTrailing = findCharInMatrix(decryptionTable, message[i + 1]);
+    for (let i = 0; i < encryptedMessage.length; i += 2) {
+        const indexLeading = findCharInMatrix(encryptionTable, encryptedMessage[i]);
+        const indexTrailing = findCharInMatrix(encryptionTable, encryptedMessage[i + 1]);
 
         if (indexLeading.first !== indexTrailing.first && indexLeading.second !== indexTrailing.second) {
             // Правило 2: Літери в різних рядках і стовпцях
-            result += decryptionTable[indexLeading.first][indexTrailing.second];
-            result += decryptionTable[indexTrailing.first][indexLeading.second];
+            result += encryptionTable[indexLeading.first][indexTrailing.second];
+            result += encryptionTable[indexTrailing.first][indexLeading.second];
         } else if (indexLeading.first === indexTrailing.first && indexLeading.second !== indexTrailing.second) {
             // Правило 3: Літери в одному рядку – замінюємо на літери ліворуч
-            result += decryptionTable[indexLeading.first][(indexLeading.second - 1 + columns) % columns];
-            result += decryptionTable[indexTrailing.first][(indexTrailing.second - 1 + columns) % columns];
+            result += encryptionTable[indexLeading.first][(indexLeading.second - 1 + columns) % columns];
+            result += encryptionTable[indexTrailing.first][(indexTrailing.second - 1 + columns) % columns];
         } else if (indexLeading.second === indexTrailing.second && indexLeading.first !== indexTrailing.first) {
-            // Правило 4: Літери в одному стовпці – замінюємо на літери вище
-            result += decryptionTable[(indexLeading.first - 1 + rows) % rows][indexLeading.second];
-            result += decryptionTable[(indexTrailing.first - 1 + rows) % rows][indexTrailing.second];
-        }
-    }
-
-    return result;
-}
-function playfairBigramCipherDecryptionWithMatrix(message, matrix, rows, columns) {
-    // Приведення повідомлення до верхнього регістру та видалення пробілів
-    if (!message) {
-        throw new Error("Повідомлення не може бути порожнім.");
-    }
-    message = trimming(message).toUpperCase();
-
-    // Додаємо перевірку на непарну кількість символів
-    if (message.length % 2 !== 0) {
-        throw new Error("Повідомлення повинне містити парну кількість символів для біграм.");
-    }
-
-    let result = '';
-
-    for (let i = 0; i < message.length; i += 2) {
-        // Перевіряємо, що символи існують в таблиці
-        const indexLeading = findCharInMatrix(matrix, message[i]);
-        const indexTrailing = findCharInMatrix(matrix, message[i + 1]);
-
-        if (!indexLeading || !indexTrailing) {
-            throw new Error("Символ не знайдений в таблиці.");
-        }
-
-        if (indexLeading.first !== indexTrailing.first && indexLeading.second !== indexTrailing.second) {
-            result += matrix[indexLeading.first][indexTrailing.second];
-            result += matrix[indexTrailing.first][indexLeading.second];
-        } else if (indexLeading.first === indexTrailing.first) {
-            result += matrix[indexLeading.first][(indexLeading.second + columns - 1) % columns];
-            result += matrix[indexTrailing.first][(indexTrailing.second + columns - 1) % columns];
-        } else if (indexLeading.second === indexTrailing.second) {
-            result += matrix[(indexLeading.first + rows - 1) % rows][indexLeading.second];
-            result += matrix[(indexTrailing.first + rows - 1) % rows][indexTrailing.second];
+            // Правило 4: Літери в одному стовпці – замінюємо на літери зверху
+            result += encryptionTable[(indexLeading.first - 1 + rows) % rows][indexLeading.second];
+            result += encryptionTable[(indexTrailing.first - 1 + rows) % rows][indexTrailing.second];
         }
     }
 
     return result;
 }
 
-// Функція для пошуку символу в таблиці з перевіркою
-function findCharInMatrix(matrix, char) {
-    if (!char) return null; // Перевірка на наявність символу
 
-    for (let row = 0; row < matrix.length; row++) {
-        for (let col = 0; col < matrix[row].length; col++) {
-            if (matrix[row][col] && matrix[row][col].toUpperCase() === char.toUpperCase()) {
-                return { first: row, second: col };
-            }
-        }
-    }
-    return null;
-}
-
-// Функція для створення таблиці (залишається такою ж)
+// Функція для створення таблиці шифру
 function createEncryptionTable(key, rows, columns) {
     const encryptionTable = [];
     let index = 0;
@@ -135,28 +109,17 @@ function createEncryptionTable(key, rows, columns) {
 
     return encryptionTable;
 }
-
-// Функція для пошуку символу в таблиці (залишається такою ж)
+// Функція для пошуку символу в таблиці
 function findCharInMatrix(matrix, char) {
     for (let row = 0; row < matrix.length; row++) {
         for (let col = 0; col < matrix[row].length; col++) {
-            if (matrix[row][col].toUpperCase() === char.toUpperCase()) {
+            if (matrix[row][col] === char) {
                 return { first: row, second: col };
             }
         }
     }
     return null;
 }
-
-// Функції для видалення пробілів та повторів в ключі (залишаються такими ж)
-function trimming(message) {
-    return message.trim().replace(/\s+/g, '');
-}
-
-function removeDuplicateCharsFromKey(key) {
-    return [...new Set(key)].join('');
-}
-
 // Функція для отримання алфавіту
 function getAlphabet(type) {
     const latinAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -170,6 +133,86 @@ function getAlphabet(type) {
         throw new Error("Неправильний вибір алфавіту.");
     }
 }
+function trimming(message) {
+    return message.trim().replace(/\s+/g, ''); // Видаляємо пробіли на початку, в кінці та зайві пробіли всередині
+}
+function removeDuplicateCharsFromKey(key) {
+    return [...new Set(key)].join('');
+}
+// Обробка події надсилання форми для дешифрування з використанням матриці
+document.getElementById('matrix-decryption-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const message = document.getElementById('message-matrix').value.toUpperCase();
+    const rows = parseInt(document.getElementById('matrix-rows').value);
+    const columns = parseInt(document.getElementById('matrix-columns').value);
+
+    // Збираємо таблицю з введеними значеннями
+    const matrix = [];
+    for (let r = 0; r < rows; r++) {
+        matrix[r] = [];
+        for (let c = 0; c < columns; c++) {
+            const input = document.querySelector(`input[data-row="${r}"][data-column="${c}"]`);
+            if (input) {
+                matrix[r][c] = input.value.trim().toUpperCase();
+            }
+        }
+    }
+
+    // Тут можете вставити вашу логіку дешифрування на основі таблиці
+    try {
+        const encryptedText = playfairBigramCipherDecryptionWithMatrix(message, matrix, rows, columns);
+        document.getElementById('decrypted-text').textContent = encryptedText;
+        document.getElementById('result-box').style.display = 'block'; // Показати результати
+    } catch (error) {
+        alert(error.message); // Вивести повідомлення про помилку
+    }
+});
+
+function playfairBigramCipherDecryptionWithMatrix(encryptedMessage, matrix, rows, columns) {
+    // Приведення зашифрованого повідомлення до верхнього регістру та видалення пробілів
+    encryptedMessage = trimming(encryptedMessage).toUpperCase();
+
+    let result = '';
+
+    // Перебираємо кожен біграм
+    for (let i = 0; i < encryptedMessage.length; i += 2) {
+        const indexLeading = findCharInMatrix(matrix, encryptedMessage[i]);
+        const indexTrailing = findCharInMatrix(matrix, encryptedMessage[i + 1]);
+
+        if (indexLeading && indexTrailing) {
+            if (indexLeading.first !== indexTrailing.first && indexLeading.second !== indexTrailing.second) {
+                // Літери в різних рядках і стовпцях – замінюємо перехресно
+                result += matrix[indexLeading.first][indexTrailing.second];
+                result += matrix[indexTrailing.first][indexLeading.second];
+            } else if (indexLeading.first === indexTrailing.first && indexLeading.second !== indexTrailing.second) {
+                // Літери в одному рядку – замінюємо на літери ліворуч
+                result += matrix[indexLeading.first][(indexLeading.second - 1 + columns) % columns];
+                result += matrix[indexTrailing.first][(indexTrailing.second - 1 + columns) % columns];
+            } else if (indexLeading.second === indexTrailing.second && indexLeading.first !== indexTrailing.first) {
+                // Літери в одному стовпці – замінюємо на літери зверху
+                result += matrix[(indexLeading.first - 1 + rows) % rows][indexLeading.second];
+                result += matrix[(indexTrailing.first - 1 + rows) % rows][indexTrailing.second];
+            }
+        } else {
+            throw new Error("Символ не знайдений в таблиці.");
+        }
+    }
+
+    return result;
+}
+// Функція для пошуку символу в таблиці
+function findCharInMatrix(matrix, char) {
+    for (let row = 0; row < matrix.length; row++) {
+        for (let col = 0; col < matrix[row].length; col++) {
+            if (matrix[row][col].toUpperCase() === char.toUpperCase()) {
+                return { first: row, second: col };
+            }
+        }
+    }
+    return null;
+}
+
 // Логіка для показу/приховування пояснень
 document.getElementById('toggle-steps-btn').addEventListener('click', function () {
     const explanationBox = document.getElementById('step-by-step');
