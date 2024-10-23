@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шифрування одиночною перестановкою</title>
+    <title>AES</title>
     <link rel="stylesheet" href="../Styles/style.css">
-    <link rel="stylesheet" href="../Styles/singlePermutation.css">
+    <link rel="stylesheet" href="../Styles/process.css">
 </head>
 <body>
     <div id="header">
@@ -109,29 +109,17 @@
             </ul>
         </nav>
     </div>
-      <div class="container">
-        <h1>Шифрування одиночною перестановкою</h1>
-        <form id="encryption-form" class="form">
-            <label for="message">Введіть повідомлення:</label>
-            <textarea id="message" rows="4" required></textarea>
-    
-            <label for="key">Введіть ключ:</label>
-            <input type="text" id="key" required>
-    
-            <button type="button" id="encrypt-btn">Зашифрувати</button>
-        </form>
-    
-        <div class="result-box" id="result-box" style="display: none;">
-            <h2>Результат шифрування:</h2>
-            <p id="encrypted-text"></p>
+    <div class="container">
+        <h1>Сторінка в процесі розробки</h1>
+        <div class="message">
+            <p>На жаль, ця сторінка ще не готова. Ми працюємо над нею, щоб вона стала доступною найближчим часом.</p>
+            <p>Дякуємо за ваше терпіння!</p>
         </div>
-    
-        <small>Примітка: Використовується символ "_" для заповнення.</small><br>
-        <button id="toggle-steps-btn">Показати пояснення</button>
-        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
+        <div class="footer">
+            <p>© 2024 Всі права захищені.</p>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../JS/script.js" defer></script>
-    <script src="../JS/singlePermutationEn.js"></script>
 </body>
 </html>

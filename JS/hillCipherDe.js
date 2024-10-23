@@ -1,137 +1,206 @@
-document.getElementById("hill-decryption-form").addEventListener("submit", function(event) {
+document.getElementById("matrix-size").addEventListener("change", function () {
+    const size = parseInt(this.value);
+    const container = document.getElementById("key-matrix-container");
+
+    // Очищуємо попередню таблицю
+    container.innerHTML = '';
+
+    // Створюємо нову таблицю для ключа
+    const table = document.createElement("table");
+    table.classList.add("key-matrix");
+
+    for (let i = 0; i < size; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < size; j++) {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.classList.add("matrix-input");
+            input.required = true;
+            cell.appendChild(input);
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+
+    container.appendChild(table);
+});
+
+document.getElementById("hill-decryption-form").addEventListener("submit", function (event) {
     event.preventDefault();
 
     const message = document.getElementById("cipher-text").value.trim().toUpperCase();
-    const keyInput = document.getElementById("key").value.trim();
+    const matrixSize = parseInt(document.getElementById("matrix-size").value);
     const alphabetChoice = document.getElementById("alphabet").value;
 
     // Вибір алфавіту
     const alphabet = alphabetChoice === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-    const n = Math.sqrt(keyInput.length); // Розмір матриці (квадратна)
+    const mod = alphabet.length;
 
-    function hillCipherDecryption(message, keyInput, alphabet) {
-        const keyMatrix = createKeyMatrix(keyInput, n);
-        console.log("Key matrix:", keyMatrix);
-
-        const det = determinant(keyMatrix);
-        console.log("Determinant:", det);
-
-        const mod = alphabet.length;
-        const invDet = modInverse(det, mod);
-        console.log("Inverse determinant:", invDet);
-
-        if (invDet === -1) {
-            throw new Error("Не вдалося знайти обернену матрицю для заданого ключа.");
-        }
-
-        const invKeyMatrix = getInverseMatrix(keyMatrix, invDet, mod);
-        console.log("Inverse key matrix:", invKeyMatrix);
-
-        return decryptMessage(message, invKeyMatrix, alphabet);
-    }
-
-    function createKeyMatrix(keyInput, n) {
-        const keyMatrix = [];
-        for (let i = 0; i < n; i++) {
-            keyMatrix[i] = [];
-            for (let j = 0; j < n; j++) {
-                keyMatrix[i][j] = parseInt(keyInput[i * n + j]);
-            }
-        }
-        return keyMatrix;
-    }
-
-    function determinant(matrix) {
-        const n = matrix.length;
-
-        if (n === 1) {
-            return matrix[0][0];
-        } else if (n === 2) {
-            // Детермінант 2x2
-            return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
-        } else {
-            // Загальний випадок для n x n
-            let det = 0;
-            for (let i = 0; i < n; i++) {
-                det += matrix[0][i] * determinant(getMinor(matrix, 0, i)) * (i % 2 === 0 ? 1 : -1);
-            }
-            return det;
+    // Збирання ключа з таблиці
+    const keyMatrix = [];
+    const inputs = document.querySelectorAll(".matrix-input");
+    let index = 0;
+    for (let i = 0; i < matrixSize; i++) {
+        keyMatrix[i] = [];
+        for (let j = 0; j < matrixSize; j++) {
+            keyMatrix[i][j] = parseInt(inputs[index].value);
+            index++;
         }
     }
 
-    function getMinor(matrix, row, col) {
-        return matrix.reduce((acc, r, i) => {
-            if (i !== row) {
-                acc.push(r.filter((_, j) => j !== col));
-            }
-            return acc;
-        }, []);
+    // Функція для обчислення детермінанта матриці 2x2
+    function determinant2x2(matrix) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
     }
 
-    function modInverse(a, m) {
-        a = a % m;
-        for (let x = 1; x < m; x++) {
-            if ((a * x) % m === 1) return x;
-        }
-        return -1; // Не існує оберненого
-    }
-
-    function getInverseMatrix(matrix, invDet, modulus) {
-        const adjugateMatrix = adjugate(matrix, modulus);
-        console.log("Adjugate matrix:", adjugateMatrix);
-    
-        const inverseMatrix = adjugateMatrix.map(row =>
-            row.map(value => (invDet * value) % modulus)
-        ).map(row => row.map(value => (value + modulus) % modulus)); // Упевніться, що значення додатні
-    
-        // Транспонування
-        const transposedMatrix = inverseMatrix[0].map((_, colIndex) => inverseMatrix.map(row => row[colIndex]));
-        return transposedMatrix;
-    }
-
-    function adjugate(matrix, modulus) {
-        const n = matrix.length;
-        const adjugateMatrix = [];
-
-        for (let i = 0; i < n; i++) {
-            adjugateMatrix[i] = [];
-            for (let j = 0; j < n; j++) {
-                const minor = getMinor(matrix, i, j);
-                adjugateMatrix[i][j] = Math.pow(-1, i + j) * determinant(minor) % modulus;
-                adjugateMatrix[i][j] = (adjugateMatrix[i][j] + modulus) % modulus; // Переконатися, що результат додатний
-            }
-        }
-        return adjugateMatrix;
-    }
-
-    function decryptMessage(message, invKeyMatrix, alphabet) {
-        const n = invKeyMatrix.length;
-        let result = '';
-
-        // Доповнення повідомлення до кратності розміру ключа
-        while (message.length % n !== 0) {
-            message += 'X'; // Додаємо 'X' для доповнення
+    // Функція для обчислення інверсії матриці 2x2
+    function invertMatrix2x2(matrix) {
+        const det = determinant2x2(matrix);
+        if (det === 0) {
+            alert('Матриця не має оберненої (детермінант 0).');
+            return null;
         }
 
-        for (let i = 0; i < message.length; i += n) {
-            const block = message.slice(i, i + n);
-            const decryptedBlock = [];
+        const inverseMatrix = [
+            [matrix[1][1], -matrix[0][1]],
+            [-matrix[1][0], matrix[0][0]]
+        ];
 
-            for (let j = 0; j < n; j++) {
-                let sum = 0;
-                for (let k = 0; k < n; k++) {
-                    const charIndex = alphabet.indexOf(block[k]);
-                    sum += invKeyMatrix[j][k] * charIndex; // Множення матриці
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 2; j++) {
+                inverseMatrix[i][j] = (inverseMatrix[i][j] * modInverse(det, mod)) % mod;
+                if (inverseMatrix[i][j] < 0) {
+                    inverseMatrix[i][j] += mod;
                 }
-                decryptedBlock[j] = alphabet[(sum % alphabet.length + alphabet.length) % alphabet.length]; // Додаємо результат у відкритий текст
             }
-            result += decryptedBlock.join('');
         }
 
+        return inverseMatrix;
+    }
+
+    // Функція для обчислення детермінанта матриці 3x3
+    function determinant3x3(matrix) {
+        return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+            matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+            matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+    }
+
+    // Функція для обчислення інверсії матриці 3x3
+    function invertMatrix3x3(matrix) {
+        const det = determinant3x3(matrix);
+        if (det === 0) {
+            alert('Матриця не має оберненої (детермінант 0).');
+            return null;
+        }
+
+        let inverseMatrix = [
+            [
+                matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1],
+                -(matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]),
+                matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1]
+            ],
+            [
+                -(matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]),
+                matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0],
+                -(matrix[0][0] * matrix[1][2] - matrix[0][2] * matrix[1][0])
+            ],
+            [
+                matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0],
+                -(matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]),
+                matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+            ]
+        ];
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                inverseMatrix[i][j] = (inverseMatrix[i][j] * modInverse(det, mod)) % mod;
+                if (inverseMatrix[i][j] < 0) {
+                    inverseMatrix[i][j] += mod;
+                }
+            }
+        }
+
+        return inverseMatrix;
+    }
+
+    // Функція для обчислення оберненого по модулю числа (модульної інверсії)
+    function modInverse(a, mod) {
+        a = (a % mod + mod) % mod;
+        for (let x = 1; x < mod; x++) {
+            if ((a * x) % mod === 1) {
+                return x;
+            }
+        }
+        return 1;
+    }
+
+    // Основна функція для вибору правильної інверсії матриці залежно від її розміру
+    function invertMatrix(matrix) {
+        if (matrix.length === 2) {
+            return invertMatrix2x2(matrix);
+        } else if (matrix.length === 3) {
+            return invertMatrix3x3(matrix);
+        } else {
+            alert('Інверсія для матриць більшого розміру не підтримується.');
+            return null;
+        }
+    }
+
+    // Функція для множення матриці на вектор
+    function multiplyMatrixVector(matrix, vector, mod) {
+        const result = [];
+        for (let i = 0; i < matrix.length; i++) {
+            let sum = 0;
+            for (let j = 0; j < matrix[i].length; j++) {
+                sum += matrix[i][j] * vector[j];
+            }
+            result.push((sum % mod + mod) % mod);
+        }
         return result;
     }
 
-    const decryptedMessage = hillCipherDecryption(message, keyInput, alphabet);
+    // Основна функція дешифрування за допомогою шифру Хілла
+    function hillCipherDecryption(cipherText, keyMatrix, alphabet) {
+        let decryptedText = '';
+        const matrixSize = keyMatrix.length;
+
+        const invertedMatrix = invertMatrix(keyMatrix);
+        if (!invertedMatrix) {
+            alert('Неможливо інвертувати матрицю.');
+            return '';
+        }
+
+        let numericCipherText = [];
+        for (let char of cipherText) {
+            let index = alphabet.indexOf(char);
+            if (index === -1) {
+                alert(`Символ '${char}' не знайдено в алфавіті.`);
+                return '';
+            }
+            numericCipherText.push(index);
+        }
+
+        while (numericCipherText.length % matrixSize !== 0) {
+            numericCipherText.push(alphabet.indexOf('X'));
+        }
+
+        let groupedCipherText = [];
+        for (let i = 0; i < numericCipherText.length; i += matrixSize) {
+            groupedCipherText.push(numericCipherText.slice(i, i + matrixSize));
+        }
+
+        for (let group of groupedCipherText) {
+            let decryptedGroup = multiplyMatrixVector(invertedMatrix, group, alphabet.length);
+            for (let num of decryptedGroup) {
+                decryptedText += alphabet[num];
+            }
+        }
+
+        return decryptedText;
+    }
+
+    const decryptedMessage = hillCipherDecryption(message, keyMatrix, alphabet);
     document.getElementById("decrypted-text").textContent = decryptedMessage;
     document.getElementById("result-box").style.display = "block";
 });

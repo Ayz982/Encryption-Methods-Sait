@@ -5,9 +5,6 @@ document.getElementById("decryption-form").addEventListener("submit", function(e
     const key = document.getElementById("key").value.trim().toUpperCase();
     const alphabet = document.getElementById("alphabet").value;
 
-    function trimming(input) {
-        return input.replace(/\s+/g, ''); // Видалення пробілів
-    }
 
     function findCharInFirstRowOfMatrix(matrix, char) {
         for (let j = 0; j < matrix[0].length; j++) {
@@ -26,7 +23,15 @@ document.getElementById("decryption-form").addEventListener("submit", function(e
         }
         throw new Error("Символ не знайдений у стовпці."); // Зміна наявної помилки
     }
-
+    function trimming(string){
+        let result = "";
+        for (let i = 0; i < message.length; i++) {
+            if (message[i] !== " ") {
+                result += message[i];
+            }
+        }
+        return result;
+    }
     function createMatrix(ABC) {
         const size = ABC.length;
         const string1 = Array.from({ length: size }, (_, i) => Array.from({ length: size }, (_, j) => ABC[(i + j) % size]));

@@ -6,8 +6,18 @@ document.getElementById("vigenere-form").addEventListener("submit", function(eve
     const alphabetChoice = document.getElementById("alphabet").value;
 
     const alphabet = alphabetChoice === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-    
+    function trimming(string){
+        let result = "";
+        for (let i = 0; i < message.length; i++) {
+            if (message[i] !== " ") {
+                result += message[i];
+            }
+        }
+        return result;
+    }
     function vigenereCipherEncryption(message, key, alphabet) {
+        message = trimming(message);
+        key = trimming(key);
         let result = '';
         let matrix = [];
 

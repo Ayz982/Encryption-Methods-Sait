@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Таблиці Трисемуса</title>
+    <title>AES</title>
     <link rel="stylesheet" href="../Styles/style.css">
-    <link rel="stylesheet" href="../Styles/trithemiusCipher.css">
+    <link rel="stylesheet" href="../Styles/process.css">
 </head>
 <body>
     <div id="header">
@@ -110,41 +110,16 @@
         </nav>
     </div>
     <div class="container">
-        <h1>Дешифрування за допомогою таблиці Трисемуса</h1>
-        <form id="decryption-form" class="form">
-            <label for="cipher-text">Введіть повідомлення:</label>
-            <textarea id="cipher-text" rows="4" required></textarea>
-
-            <label for="key">Введіть ключове слово:</label>
-            <input type="text" id="key" required placeholder="Ключове слово">
-
-            <label for="rows">Введіть кількість рядків:</label>
-            <input type="number" id="rows" required min="1" placeholder="Кількість рядків">
-
-            <label for="columns">Введіть кількість стовпців:</label>
-            <input type="number" id="columns" required min="1" placeholder="Кількість стовпців">
-
-            <label for="alphabet">Виберіть алфавіт:</label>
-            <select id="alphabet" required>
-                <option value="latin">Латиниця</option>
-                <option value="cyrillic">Кирилиця</option>
-            </select>
-
-            <button type="submit">Дешифрувати</button>
-        </form>
-
-        <div class="result-box" id="result-box" style="display: none;">
-            <h2>Результат дешифрування:</h2>
-            <p id="decrypted-text"></p>
+        <h1>Сторінка в процесі розробки</h1>
+        <div class="message">
+            <p>На жаль, ця сторінка ще не готова. Ми працюємо над нею, щоб вона стала доступною найближчим часом.</p>
+            <p>Дякуємо за ваше терпіння!</p>
         </div>
-
-        <button id="toggle-steps-btn">Показати пояснення</button>
-
-        <div id="step-by-step" class="explanation-box" style="display: none;"></div>
+        <div class="footer">
+            <p>© 2024 Всі права захищені.</p>
+        </div>
     </div>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../JS/script.js" defer></script>
-    <script src="../JS/trithemiusCipherDe.js"></script>
 </body>
 </html>
