@@ -5,19 +5,33 @@ document.getElementById("vigenere-form").addEventListener("submit", function(eve
     const key = document.getElementById("key").value.trim().toUpperCase();
     const alphabetChoice = document.getElementById("alphabet").value;
 
-    const alphabet = alphabetChoice === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-    function trimming(string){
+    const alphabet = alphabetChoice === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
+    function trimming(messageString){
         let result = "";
-        for (let i = 0; i < message.length; i++) {
-            if (message[i] !== " ") {
-                result += message[i];
+        for (let i = 0; i < messageString.length; i++) {
+            if (messageString[i] !== " ") {
+                result += messageString[i];
             }
         }
         return result;
     }
+function findCharInFirstRowOfMatrix(matrix, letter) {
+    for (let i = 0; i < alphabet.length; i++) {
+        if (matrix[0][i] === letter) {
+            return i;
+            }
+            }
+}
+function findCharInFirstColumnOfMatrix(matrix, letter) {
+    for (let i = 0; i < alphabet.length; i++) {
+        if (matrix[i][0] === letter) {
+            return i;
+            }
+            }
+        }
     function vigenereCipherEncryption(message, key, alphabet) {
-        message = trimming(message);
-        key = trimming(key);
+        message = trimming(message).toUpperCase();
+        key = trimming(key).toUpperCase();
         let result = '';
         let matrix = [];
 
@@ -28,11 +42,12 @@ document.getElementById("vigenere-form").addEventListener("submit", function(eve
                 matrix[i][j] = alphabet[(i + j) % alphabet.length];
             }
         }
-
+        console.log(matrix);
+        
         // Процес шифрування
         for (let i = 0; i < message.length; i++) {
-            let row = alphabet.indexOf(key[i % key.length]);
-            let col = alphabet.indexOf(message[i]);
+            let row = findCharInFirstRowOfMatrix(matrix, key[i % key.length]);
+            let col = findCharInFirstColumnOfMatrix(matrix, message[i]);
             if (row === -1 || col === -1) {
                 throw new Error("Символ не знайдений в алфавіті");
             }
