@@ -3,9 +3,9 @@ document.getElementById("decryption-form").addEventListener("submit", function(e
 
     const message = document.getElementById("cipher-text").value.trim().toUpperCase();
     const key = document.getElementById("key").value.trim().toUpperCase();
-    const alphabet = document.getElementById("alphabet").value;
+    const alphabetChoice = document.getElementById("alphabet").value;
 
-
+    const alphabet = alphabetChoice === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
     function findCharInFirstRowOfMatrix(matrix, char) {
         for (let j = 0; j < matrix[0].length; j++) {
             if (matrix[0][j] === char) {
@@ -17,38 +17,40 @@ document.getElementById("decryption-form").addEventListener("submit", function(e
 
     function findCharInColumnByRow(matrix, char, row) {
         for (let i = 0; i < matrix.length; i++) {
-            if (matrix[i][row] === char) {
+            if (matrix[row][i] === char) {
                 return i;
             }
         }
         throw new Error("Символ не знайдений у стовпці."); // Зміна наявної помилки
     }
-    function trimming(string){
+    function trimming(messageString){
         let result = "";
-        for (let i = 0; i < message.length; i++) {
-            if (message[i] !== " ") {
-                result += message[i];
+        for (let i = 0; i < messageString.length; i++) {
+            if (messageString[i] !== " ") {
+                result += messageString[i];
             }
         }
         return result;
     }
-    function createMatrix(ABC) {
-        const size = ABC.length;
-        const string1 = Array.from({ length: size }, (_, i) => Array.from({ length: size }, (_, j) => ABC[(i + j) % size]));
-        return string1;
-    }
 
     function vigenereCipherDecryption(message, key) {
         let result = '';
-        const ABC = alphabet === "latin" ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "АБВГДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ";
-        message = trimming(message);
-        key = trimming(key);
-        const string1 = createMatrix(ABC);
+        message = trimming(message).toUpperCase();
+        key = trimming(key).toUpperCase();
+        let matrix = [];
+
+        // Створюємо таблицю шифрування Віженера
+        for (let i = 0; i < alphabet.length; i++) {
+            matrix[i] = [];
+            for (let j = 0; j < alphabet.length; j++) {
+                matrix[i][j] = alphabet[(i + j) % alphabet.length];
+            }
+        }
 
         for (let i = 0; i < message.length; i++) {
-            const indexR = findCharInFirstRowOfMatrix(string1, key[i % key.length]);
-            const indexC = findCharInColumnByRow(string1, message[i], indexR);
-            result += string1[0][indexC];
+            const indexR = findCharInFirstRowOfMatrix(matrix, key[i % key.length]);
+            const indexC = findCharInColumnByRow(matrix, message[i], indexR);
+            result += matrix[0][indexC];
         }
         return result;
     }
