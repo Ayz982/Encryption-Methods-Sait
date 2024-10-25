@@ -54,18 +54,18 @@ document.getElementById("hill-form").addEventListener("submit", function(event) 
     document.getElementById("result-box").style.display = "block";
 });
 
-function trimming(string){
+function trimming(messageString){
     let result = "";
-    for (let i = 0; i < message.length; i++) {
-        if (message[i] !== " ") {
-            result += message[i];
+    for (let i = 0; i < messageString.length; i++) {
+        if (messageString[i] !== " ") {
+            result += messageString[i];
         }
     }
     return result;
 }
 
 function hillCipherEncryption(message, keyMatrix, alphabet) {
-    message = trimming(message);
+    message = trimming(message).toUpperCase();
     const n = keyMatrix.length;
     let result = '';
 
